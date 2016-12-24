@@ -1,6 +1,8 @@
-import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Point;
+
+import javax.swing.ImageIcon;
 
 
 public class Map {
@@ -40,7 +42,11 @@ public class Map {
     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
     };
     
-    public Map(){}
+    private Image blockImage;
+    
+    public Map(){
+        loadImage();
+    }
     
     public void draw(Graphics g, int offsetX, int offsetY){
         //offsetを元に描画範囲を算出
@@ -52,13 +58,12 @@ public class Map {
         lastTileX = Math.min(lastTileX, COL);
         lastTileY = Math.min(lastTileY, ROW);
         
-        g.setColor(Color.BLACK);
         for (int i = firstTileY; i<lastTileY; i++){
             for (int j = firstTileX; j<lastTileX; j++){
                 //mapの値に応じて描画
                 switch (map[i][j]) {
                     case 1:
-                        g.fillRect(tilesToPixels(j) + offsetX, tilesToPixels(i) + offsetY, TILE_SIZE, TILE_SIZE);
+                        g.drawImage(blockImage, tilesToPixels(j) + offsetX, tilesToPixels(i) + offsetY, null);
                         break;
                 }
             }
@@ -94,6 +99,11 @@ public class Map {
             }
         }
         return null;
+    }
+    
+    private void loadImage(){
+        ImageIcon icon = new ImageIcon(getClass().getResource("image/block.gif"));
+        blockImage = icon.getImage();
     }
     
     //ピクセル単位をタイル単位へ変更
