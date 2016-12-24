@@ -1,16 +1,21 @@
-import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Point;
+
+import javax.swing.ImageIcon;
 
 public class Player {
     
     //キャラの大きさ
-    public static final int WIDTH = 20;
-    public static final int HEIGHT = 20;
+    public static final int WIDTH = 32;
+    public static final int HEIGHT = 32;
     //スピード
     private static final int SPEED = 1;
     //ジャンプ力
     private static final int JUMP_SPEED = 15;
+    
+    //方向
+    private static final int RIGHT = 0;
     
     //位置
     private double x;
@@ -22,6 +27,15 @@ public class Player {
     
     //着地しているか
     private boolean onGround;
+    
+    //向いている方向
+    private int dir = RIGHT;
+    
+    //アニメーション用カウンタ
+    private int count;
+    
+    //プレイヤー画像
+    private Image image;
     
     //マップへの参照
     private Map map;
@@ -37,6 +51,13 @@ public class Player {
         vy = 0;
         onGround = false;
         onCeiling = false;
+        count = 0;
+        
+        loadImage();
+        
+        //アニメーション用
+        AnimationThread thread = new AnimationThread();
+        thread.start();
     }
     
     //停止
@@ -110,10 +131,39 @@ public class Player {
         
     }
     
+    private void loadImage() {
+        ImageIcon icon = new ImageIcon(getClass().getResource("image/player.gif"));
+        image = icon.getImage();
+    }
+    
     //プレイヤーを描画
     public void draw(Graphics g, int offsetX, int offsetY) {
-        g.setColor(Color.RED);
-        g.fillOval((int)x + offsetX, (int)y + offsetY, WIDTH, HEIGHT);
+        g.drawImage(image,
+                    (int)x + offsetX, (int)y + offsetY,
+                    (int)x + offsetX + WIDTH, (int)y + offsetY + HEIGHT,
+                    count * WIDTH, dir * HEIGHT,
+                    count * WIDTH + WIDTH, dir * HEIGHT + HEIGHT,
+                    null);
+    }
+    
+    //アニメーション処理
+    private class AnimationThread extends Thread {
+        public void run() {
+            while (true) {
+                if(count == 0){
+                    count=1;
+                } else {
+                    count=0;
+                }
+                
+                //絵の切り替え
+                try{
+                    Thread.sleep(300);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
     
     public double getX() {
