@@ -10,9 +10,9 @@ public class Player {
     public static final int WIDTH = 32;
     public static final int HEIGHT = 32;
     //スピード
-    private static final int SPEED = 1;
+    private static final int SPEED = 5;
     //ジャンプ力
-    private static final int JUMP_SPEED = 15;
+    private static final int JUMP_SPEED = 12;
     
     //方向
     private static final int RIGHT = 0;

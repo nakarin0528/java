@@ -65,6 +65,7 @@ public class MainPanel extends JPanel implements Runnable, KeyListener {
     public void paintComponent(Graphics g) {    //描画
         
         super.paintComponent(g);
+        //offsetを計算，マップ端ではスクロールしない
         int offsetX = MainPanel.WIDTH/2 - (int)player.getX();
         offsetX = Math.min(offsetX, 0);
         offsetX = Math.max(offsetX, MainPanel.WIDTH - Map.WIDTH);
