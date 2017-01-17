@@ -53,23 +53,24 @@ public class Game extends JPanel implements Runnable, KeyListener{
                 break;
             }
         
-            bufferGraphics.setBackground(Color.black);
-            bufferGraphics.clearRect(0, 0, 480, 640);
+            Graphics2D g2 = (Graphics2D) bufferGraphics;    //2Dにキャスト
             
-            bufferGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            bufferGraphics.setStroke(new BasicStroke(4.0f));
+            g2.setBackground(Color.black);
+            g2.clearRect(0, 0, 480, 640);
+            
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setStroke(new BasicStroke(4.0f));
             
             _gmanager.GameMainUpdate();
             
-            ShowObjects(bufferGraphics);
+            ShowObjects(g2);
             
             repaint();
         }
     }
     
-    public void ShowObjects(Graphics g)
-    {
-        _gmanager.State().Show(g);
+    public void ShowObjects(Graphics2D g2){
+        _gmanager.State().Show(g2);
     }
     
     public void paintComponent(Graphics g){

@@ -3,7 +3,7 @@ import java.awt.event.*;
 
 public interface GameMode{
 	
-	public void Show(Graphics g, int offsetX, int offsetY);
+	public void Show(Graphics2D g2);
 	public void run(GameManager gm);
 	public void init();
 	
