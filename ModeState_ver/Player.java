@@ -42,8 +42,10 @@ public class Player {
     
     //天井についたかどうか
     private boolean onCeiling;
+    //キーの入力状態
+    private boolean spacePressed;
     
-    public Player(double x, double y, Map map) {
+    public Player(double x, double y, Map map) {   //OK
         this.x = x;
         this.y = y;
         this.map = map;
@@ -65,24 +67,13 @@ public class Player {
         vx = 0;
     }
     
-    //右に加速
-    public void accelerateRight() {
-        vx = SPEED;
-    }
-    
-    //ジャンプする
-    public void jump() {
-        //if (onGround) {
-            //上へ速度を加える
-            vy = -JUMP_SPEED;
-          //  onGround = false;
-        //}
-    }
     
     //プレイヤー状態更新
-    public void update() {
+    public void move() {
         //重力がかかる
         vy += Map.GRAVITY;
+        //右に加速
+        vx = SPEED;
         
         /*x方向の当たり判定*/
         //移動先
@@ -102,7 +93,7 @@ public class Player {
         //移動先
         double newY = y + vy;
         //移動先のタイルの有無
-        tile = map. getTileCollision(this, x, newY);
+        tile = map.getTileCollision(this, x, newY);
         if (tile == null){  //タイルなし
             y = newY;
             onGround = false;
@@ -119,9 +110,9 @@ public class Player {
             }
         }
         /*
-        //速度をもとに位置更新
-        x += vx;
-        y += vy;*/
+         //速度をもとに位置更新
+         x += vx;
+         y += vy;*/
         
         //天井についたかどうか
         if (y< 0) {
@@ -129,25 +120,29 @@ public class Player {
             onCeiling = true;
         }
         
+        if (spacePressed) {
+            vy = -JUMP_SPEED;
+            spacePressed = false;
+        }
     }
     
-    private void loadImage() {
+    private void loadImage() {  //OK
         ImageIcon icon = new ImageIcon(getClass().getResource("image/player.gif"));
         image = icon.getImage();
     }
     
     //プレイヤーを描画
-    public void draw(Graphics g, int offsetX, int offsetY) {
-        g.drawImage(image,
-                    (int)x + offsetX, (int)y + offsetY,
-                    (int)x + offsetX + WIDTH, (int)y + offsetY + HEIGHT,
-                    count * WIDTH, dir * HEIGHT,
-                    count * WIDTH + WIDTH, dir * HEIGHT + HEIGHT,
-                    null);
+    public void show(Graphics2D g2, int offsetX, int offsetY) {  //OK
+        g2.drawImage(image,
+                     (int)x + offsetX, (int)y + offsetY,
+                     (int)x + offsetX + WIDTH, (int)y + offsetY + HEIGHT,
+                     count * WIDTH, dir * HEIGHT,
+                     count * WIDTH + WIDTH, dir * HEIGHT + HEIGHT,
+                     null);
     }
     
     //アニメーション処理
-    private class AnimationThread extends Thread {
+    private class AnimationThread extends Thread {  //OK
         public void run() {
             while (true) {
                 if(count == 0){
@@ -173,4 +168,20 @@ public class Player {
     public double getY() {
         return y;
     }
+    
+    public void KeyPressedAnalyze(KeyEvent e){
+        int key = e.getKeyCode();
+        
+        if (key == KeyEvent.VK_SPACE){
+            spacePressed = true;
+        }
+    }
+    public void KeyReleasedAnalyze(KeyEvent e){
+        int key = e.getKeyCode();
+        
+        if (key == KeyEvent.VK_SPACE){
+            spacePressed = false;
+        }
+    }
+    public void KeyTypedAnalyze(KeyEvent e){}
 }

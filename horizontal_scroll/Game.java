@@ -16,7 +16,7 @@ public class Game extends JFrame {
         pack();
     }
     
-    public static void main(String[] args) {
+    public static void main(String[] args) {ｚ
         Game frame = new Game();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
