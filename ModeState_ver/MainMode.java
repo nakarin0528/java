@@ -46,6 +46,10 @@ public class MainMode implements GameMode{
     
     public void run(GameManager gm){
         player.move();
+        
+        if(player.HitCheck()){
+            gm.ChangeMode(new ExitState());
+        }
     }
     
     

@@ -14,6 +14,7 @@ public class Game extends JPanel implements Runnable, KeyListener{
         
         frame.getContentPane().add(app);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setBounds(10, 10, 640, 500); // ウィンドウサイズ
         frame.setResizable(false);
         frame.setTitle("Game");
         frame.setVisible(true);
@@ -33,7 +34,7 @@ public class Game extends JPanel implements Runnable, KeyListener{
         setForeground(Color.white);
         
         if(buffer == null){
-            buffer = createImage(640,480);
+            buffer = createImage(640,500);
             bufferGraphics = buffer.getGraphics();
         }
         
@@ -56,7 +57,7 @@ public class Game extends JPanel implements Runnable, KeyListener{
             Graphics2D g2 = (Graphics2D) bufferGraphics;    //2Dにキャスト
             
             g2.setBackground(Color.black);
-            g2.clearRect(0, 0, 480, 640);
+            g2.clearRect(0, 0, 640, 500);
             
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2.setStroke(new BasicStroke(4.0f));

@@ -44,6 +44,10 @@ public class Player {
     
     //天井についたかどうか
     private boolean onCeiling;
+    
+    //当たり判定用
+    private boolean hitCheck_x, hitCheck_y;
+    
     //キーの入力状態
     private boolean spacePressed;
     
@@ -84,11 +88,13 @@ public class Player {
         Point tile = map.getTileCollision(this, newX, y);
         if (tile==null) {   //タイルなし
             x = newX;
+            hitCheck_x = false;
         } else {    //タイルあり
             if (vx > 0) {
                 x = Map.tilesToPixels(tile.x) - WIDTH;  //位置調整
             }
             vx = 0;
+            hitCheck_x = true;
         }
         
         /*y方向の当たり判定*/
@@ -100,6 +106,8 @@ public class Player {
             y = newY;
             onGround = false;
             onCeiling = false;
+            hitCheck_y = false;
+            
         } else {    //タイルあり
             if(vy>0) {  //下に移動中の時，下のブロックと衝突
                 y = Map.tilesToPixels(tile.y) - HEIGHT;
@@ -110,22 +118,19 @@ public class Player {
                 vy = 0;
                 onCeiling = true;
             }
-        }
-        /*
-         //速度をもとに位置更新
-         x += vx;
-         y += vy;*/
-        
-        //天井についたかどうか
-        if (y< 0) {
-            y = 0;
-            onCeiling = true;
+            hitCheck_y = true;
         }
         
         if (spacePressed) {
             vy = -JUMP_SPEED;
             spacePressed = false;
         }
+    }
+    
+    public boolean HitCheck() {
+        boolean rtn = false;
+        rtn = hitCheck_x || hitCheck_y;
+        return rtn;
     }
     
     private void loadImage() {  //OK
