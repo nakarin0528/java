@@ -12,12 +12,14 @@ public class Player {
     public static final int WIDTH = 32;
     public static final int HEIGHT = 32;
     //スピード
-    private static final int SPEED = 3;
+    private static final int SPEED = 4;
     //ジャンプ力
     private static final int JUMP_SPEED = 14;
     
-    //方向
-    private static final int RIGHT = 0;
+    //キャラ種類
+    private static final int Red = 0;
+    private static final int Blue = 1;
+    private static final int Yellow = 2;
     
     //位置
     private double x;
@@ -30,8 +32,8 @@ public class Player {
     //着地しているか
     private boolean onGround;
     
-    //向いている方向
-    private int dir = RIGHT;
+    //使用するキャラ
+    private int p_color;
     
     //アニメーション用カウンタ
     private int count;
@@ -51,7 +53,10 @@ public class Player {
     //キーの入力状態
     private boolean spacePressed;
     
-    public Player(double x, double y, Map map) {   //OK
+    public Player(double x, double y, Map map, int p_num) {   //OK
+        
+        p_color = p_num;
+        
         this.x = x;
         this.y = y;
         this.map = map;
@@ -66,6 +71,27 @@ public class Player {
         //アニメーション用
         AnimationThread thread = new AnimationThread();
         thread.start();
+    }
+    
+    //Select用
+    
+    public Player(double x,double y, int p_num){
+    
+        p_color = p_num;
+        
+        this.x = x;
+        this.y = y;
+        vx = 0;
+        vy = 0;
+        onGround = false;
+        onCeiling = false;
+        count = 0;
+        
+        loadImage();
+        
+        AnimationThread thread = new AnimationThread();
+        thread.start();
+        
     }
     
     //停止
@@ -88,13 +114,11 @@ public class Player {
         Point tile = map.getTileCollision(this, newX, y);
         if (tile==null) {   //タイルなし
             x = newX;
-            hitCheck_x = false;
         } else {    //タイルあり
             if (vx > 0) {
                 x = Map.tilesToPixels(tile.x) - WIDTH;  //位置調整
             }
             vx = 0;
-            hitCheck_x = true;
         }
         
         /*y方向の当たり判定*/
@@ -106,8 +130,6 @@ public class Player {
             y = newY;
             onGround = false;
             onCeiling = false;
-            hitCheck_y = false;
-            
         } else {    //タイルあり
             if(vy>0) {  //下に移動中の時，下のブロックと衝突
                 y = Map.tilesToPixels(tile.y) - HEIGHT;
@@ -118,6 +140,26 @@ public class Player {
                 vy = 0;
                 onCeiling = true;
             }
+        }
+        
+        //x方向の当たり判定
+    	//移動先の針の有無
+       Point needle = map.getNeedleCollision(this, newX, y);
+    	if (needle==null) {   //針なし
+            hitCheck_x = false;
+        } else {   //針あり
+            
+            vx = 0;
+            hitCheck_x = true;
+        }
+        //y方向の当たり判定
+    	//移動先のタイルの有無
+    	needle = map.getNeedleCollision(this, x, newY);
+        if (needle == null){  //タイルなし
+            hitCheck_y = false;
+            
+        } else {    //タイルあり
+                vy = 0;
             hitCheck_y = true;
         }
         
@@ -134,7 +176,7 @@ public class Player {
     }
     
     private void loadImage() {  //OK
-        ImageIcon icon = new ImageIcon(getClass().getResource("image/player.gif"));
+        ImageIcon icon = new ImageIcon(getClass().getResource("image/players.png"));
         image = icon.getImage();
     }
     
@@ -143,8 +185,18 @@ public class Player {
         g2.drawImage(image,
                      (int)x + offsetX, (int)y + offsetY,
                      (int)x + offsetX + WIDTH, (int)y + offsetY + HEIGHT,
-                     count * WIDTH, dir * HEIGHT,
-                     count * WIDTH + WIDTH, dir * HEIGHT + HEIGHT,
+                     count * WIDTH, p_color * HEIGHT,
+                     count * WIDTH + WIDTH, p_color * HEIGHT + HEIGHT,
+                     null);
+    }
+    
+    //Select用
+    public void show(Graphics2D g2){
+        g2.drawImage(image,
+                     (int)x , (int)y ,
+                     (int)x + WIDTH, (int)y + HEIGHT,
+                     count * WIDTH, p_color * HEIGHT,
+                     count * WIDTH + WIDTH, p_color * HEIGHT + HEIGHT,
                      null);
     }
     
